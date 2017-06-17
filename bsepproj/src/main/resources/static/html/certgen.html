@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+
+		<script src="jquery-1.11.1.min.js"></script>
+        <script src="bootstrap.min.js"></script>
+        <script src="jquery.backstretch.min.js"></script>
+        <script src="scripts.js"></script>
+
+</head>
+<body>
+
+<div class="modal-body">
+        				
+	                    <form role="form" action="" method="post" class="login-form" id="formaReg">
+	                    	<div class="form-group">
+	                    		<label class="sr-only" for="name">Ime</label>
+	                        	<input type="text" name="ime" placeholder="Ime..." class="form-name form-control" id="name">
+	                        </div>
+	                        <div class="form-group">
+	                        	<label class="sr-only" for="surname">Prezime</label>
+	                        	<input type="text" name="prezime" placeholder="Prezime..." class="form-password form-control" id="surname">
+	                        </div>
+							<div class="form-group">
+	                    		<label class="sr-only" for="userName">Email</label>
+	                        	<input type="text" name="email" placeholder="Email..." class="form-username form-control" id="email">
+	                        </div>
+	                        <div class="form-group">
+	                    		<label class="sr-only" for="userName">Kompanija</label>
+	                        	<input type="text" name="kompanija" placeholder="Preduzece..." class="form-username form-control" id="company">
+	                        </div>
+	                        <div class="form-group">
+	                    		<label class="sr-only" for="userName">ID Korisnika</label>
+	                        	<input type="number" name="idKorisnika" placeholder="ID Korisnika..." class="form-username form-control" id="userID">
+	                        </div>
+	                         <div class="form-group">
+	                    		<label class="sr-only" for="userName">Datum izdavanja sertifikata</label>
+	                        	<input type="date" name="startDate" placeholder="Datum pocetka..." class="form-username form-control" id="startDate">
+	                        </div>
+	                        <div class="form-group">
+	                    		<label class="sr-only" for="userName">Datum prestanka vazenja sertifikata</label>
+	                        	<input type="date" name="endDate" placeholder="Datum kraja..." class="form-username form-control" id="endDate">
+	                        </div>
+							
+							<button type="submit" id="regSe" class="btn" onclick="registerUser()">Register</button>
+	                        
+	                    </form>
+	                    
+</div>
+
+
+<script>
+
+	function getFormData($form){
+	    var unindexed_array = $form.serializeArray();
+	    var indexed_array = {};
+	
+	    $.map(unindexed_array, function(n, i){
+	        indexed_array[n['name']] = n['value'];
+	    });
+	
+	    return indexed_array;
+    }
+
+   function registerUser() {
+		var $form = $("#formaReg");
+		var dataa = getFormData($form);
+		var s = JSON.stringify(dataa);
+	
+		$.ajax({
+			
+			type:"POST",
+			url: "/selfsign",					
+			data: s,
+			contentType:"application/json; charset=utf-8",
+			dataType:"json",
+			success: function(data) {
+				if(data.ok == true){
+					alert(data.obj);
+					window.location.href = 'temp.html';
+				}
+			}
+		});
+    }
+   
+	</script>
+
+</body>
+</html>

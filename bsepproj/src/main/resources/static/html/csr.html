@@ -1,0 +1,24 @@
+
+
+
+<div ng-controller="csrController" >
+
+Odaberite potpisivaca: <select ng-model="signer" id="signer"></select>
+
+<textarea ng-model="csr_req" cols="50" rows="5">
+
+
+
+</textarea>
+<select ng-model="days" id="days">trajanje:
+<option>365</option>
+<option>730</option>
+<option>1095</option>
+<option>1460</option>
+<option>1825</option>
+</select>
+
+<button ng-click="csrAction()">send request</button>
+
+
+</div>

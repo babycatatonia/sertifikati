@@ -1,0 +1,1 @@
+BEZB prva tacka + bonus

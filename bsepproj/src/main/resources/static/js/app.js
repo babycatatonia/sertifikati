@@ -1,0 +1,1 @@
+var app = angular.module('certApp', ['certApp.controller', 'certApp.service', 'certApp.route', 'ngMessages']);

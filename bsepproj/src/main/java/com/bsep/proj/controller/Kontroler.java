@@ -225,17 +225,18 @@ public class Kontroler {
 	
 		KeyStoreWriter keyStoreWriter = new KeyStoreWriter();
 		keyStoreWriter.loadKeyStore(null, info.getKeystorepass().toCharArray());
-	
+		
+		saveToConfig("keystore", info.getKeystorepass());
 		
 		
-		keyStoreWriter.write(info.getAlias(), keyPairIssuer.getPrivate(), info.getCertpass().toCharArray(), cert);
+		keyStoreWriter.write(info.getAlias(), keyPairIssuer.getPrivate(), loadCertPass().toCharArray(), cert);
 		String keystorepass = info.getKeystorepass();
 		keyStoreWriter.saveKeyStore("./data/keystore.jks",info.getKeystorepass().toCharArray() );
 		
 		Certificates cer = new Certificates( Long.parseLong(sn), info.getAlias(), true);
 		service.addCertificate(cer);
 		
-		saveToConfig("keystore", info.getKeystorepass());
+		
 
 	
 		
@@ -312,7 +313,7 @@ public class Kontroler {
 		
 		KeyStoreReader ksr = new KeyStoreReader();
 		java.security.cert.Certificate jcert = ksr.readCertificate("./data/keystore.jks",
-				"admin",info.getSigner());
+				loadKeyStorePass(),info.getSigner());
 		
 		
 		
@@ -350,9 +351,9 @@ public class Kontroler {
 		//SIFRU UNOSITI
 		keyStoreWriter.loadKeyStore("./data/keystore.jks", loadKeyStorePass().toCharArray());
 	
-		String pkpass  = "private";
-		keyStoreWriter.write(info.getAlias(), keyPairIssuer.getPrivate(), pkpass.toCharArray(), cert);
-		String keystorepass = "admin";
+	
+		keyStoreWriter.write(info.getAlias(), keyPairIssuer.getPrivate(), loadCertPass().toCharArray(), cert);
+		
 		keyStoreWriter.saveKeyStore("./data/keystore.jks",loadKeyStorePass().toCharArray() );
 		Certificates cer =null;
 		
@@ -425,10 +426,10 @@ public class Kontroler {
 			//SIFRU UNOSITI
 			keyStoreWriter.loadKeyStore("./data/keystore.jks", loadKeyStorePass().toCharArray());
 		
-			String certpass  = "private";
 			
-			keyStoreWriter.write("csrcert", issuerPrivate, certpass.toCharArray(), cert);
-			String keystorepass = "admin";
+			
+			keyStoreWriter.write("csrcert", issuerPrivate, loadCertPass().toCharArray(), cert);
+			
 			keyStoreWriter.saveKeyStore("./data/keystore.jks",loadKeyStorePass().toCharArray() );
 			Certificates cer =null;
 			
@@ -562,8 +563,7 @@ public class Kontroler {
 		//SIFRU UNOSITI
 		keyStoreWriter.loadKeyStore("./data/keystore.jks", loadKeyStorePass().toCharArray());
 	
-		String pkpass  = "private";
-		keyStoreWriter.write(info.getAlias(), keyPairIssuer.getPrivate(), pkpass.toCharArray(), cert);
+		keyStoreWriter.write(info.getAlias(), keyPairIssuer.getPrivate(), loadCertPass().toCharArray(), cert);
 		String keystorepass = "admin";
 		keyStoreWriter.saveKeyStore("./data/keystore.jks",loadKeyStorePass().toCharArray() );
 		Certificates cer =null;
@@ -629,6 +629,7 @@ public class Kontroler {
 
 			// set the properties value
 			prop.setProperty(par1,par2);
+			prop.setProperty("certpass","private");
 			
 
 			// save properties to project root folder
@@ -678,7 +679,34 @@ public class Kontroler {
 
 	}
 	
-	
+	private String loadCertPass(){
+		Properties prop = new Properties();
+    	InputStream input = null;
+
+    	try {
+
+    		input = new FileInputStream("config.properties");
+
+    		// load a properties file
+    		prop.load(input);
+
+    	return prop.getProperty("certpass");
+    	
+
+    	} catch (IOException ex) {
+    		ex.printStackTrace();
+        } finally{
+        	if(input!=null){
+        		try {
+				input.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+        	}
+        }
+		return null;
+
+	}	
 	
 
 }

@@ -18,4 +18,9 @@ opcijeController.controller('opcijeController', function($scope, $location,
 		else
 			return false;
 	};
+	
+	$scope.logout = function(){
+		opcijeService.logout();
+		$location.path('/');
+	};
 })

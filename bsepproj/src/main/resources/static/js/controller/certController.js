@@ -27,10 +27,7 @@ certController.controller('certController', function($scope, $location,
 
 	$scope.selfsign = function(){
 		
-	var pass1 = $scope.certpass1;
-	var pass2 = $scope.certpass2;
-		
-	if(pass1.localeCompare(pass2)==0){
+	
 		
 		var data = {
 			ime : $scope.ime,
@@ -44,7 +41,7 @@ certController.controller('certController', function($scope, $location,
 			keystorepass : $scope.keystorepass,
 			alias : $scope.alias,
 			signer :$scope.signer,
-			certpass: pass1
+			
 		}
 		
 		var str = JSON.stringify(data);
@@ -59,9 +56,7 @@ certController.controller('certController', function($scope, $location,
     		}
     		
 		});
-				}else {
-					alert('sifre se ne poklapaju!');
-				}
+				
 					}
 	
 	

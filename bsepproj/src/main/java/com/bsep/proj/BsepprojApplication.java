@@ -14,6 +14,9 @@ public class BsepprojApplication {
 
 	public static void main(String[] args) {
 		Security.addProvider(new BouncyCastleProvider());
+
+		System.out.println(Security.getProviders());
+
 		SpringApplication.run(BsepprojApplication.class, args);
 	}
 }

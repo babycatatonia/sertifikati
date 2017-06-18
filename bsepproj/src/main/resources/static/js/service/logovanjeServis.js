@@ -8,6 +8,10 @@ logovanjeServis.factory('logovanjeServis', function($http) {
 		return $http.post('/contr/login', korisnik);
 	}
 	
+	temp.koJeNaSesiji = function() {
+		return $http.post('/contr/check');
+	}
+	
 	return temp;
 	
 })

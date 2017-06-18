@@ -8,6 +8,10 @@ opcijeService.factory('opcijeService', function($http) {
 	temp.ucitajPrivilegije = function() {
 		return $http.get('/klijentKontroler/ucitajPrivilegije');
 	}
+	
+	temp.logOut = function(){
+		return $http.post('/contr/logout');
+	}
 
 	return temp;
 	

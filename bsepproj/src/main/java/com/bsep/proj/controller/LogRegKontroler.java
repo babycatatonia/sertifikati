@@ -60,4 +60,15 @@ public class LogRegKontroler {
 			return new ResponseEntity<Poruka>(new Poruka("NijeIzlogovan", null), HttpStatus.ACCEPTED);			
 		}
 	}
+	
+	@RequestMapping(value = "/check", method = RequestMethod.POST)
+	public ResponseEntity<Poruka> checkSessions(HttpSession session){
+		Korisnik kor = (Korisnik) session.getAttribute("ulogovanKorisnik");
+		if(kor != null){
+			return new ResponseEntity<Poruka>(new Poruka("NekoNaSesiji", kor), HttpStatus.ACCEPTED);
+		}else{
+			return new ResponseEntity<Poruka>(new Poruka("NikoNaSesiji", null), HttpStatus.ACCEPTED);
+		}	
+			
+	}
 }

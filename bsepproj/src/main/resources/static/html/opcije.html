@@ -1,8 +1,8 @@
-
+<div ng-cloak ng-controller="opcijeController">
 <ul>
 
-	<li><a href="#/selfsigncert">Samopotpisujuci sertifikat</a></li>
-	<li><a href="#/newcacert">Generisanje sertifikata za CA</a></li>
+	<li ng-show="hasPrivilege('SelfSign')"><a href="#/selfsigncert">Samopotpisujuci sertifikat</a></li>
+	<li ng-show="hasPrivilege('NewCACert')"><a href="#/newcacert">Generisanje sertifikata za CA</a></li>
 	<li><a href="#/genusercert">Generisanje sertifikata za pravna lica</a></li>
 	<li><a href="#/certinfo">Preuzimanje sertifikata</a></li>
 	<li><a href="#/povuci">Povlacenje sertifikata</a></li>

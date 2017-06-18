@@ -3,6 +3,8 @@ var app = angular.module("certApp.route", [ "ngRoute" ]);
 
 app.config(function($routeProvider) {
 	$routeProvider.when("/", {
+        templateUrl : "html/logovanje.html"
+    }).when("/opcije", {
 		templateUrl : "html/opcije.html"
 	}).when("/selfsigncert",{
     	templateUrl : "html/selfcert.html"

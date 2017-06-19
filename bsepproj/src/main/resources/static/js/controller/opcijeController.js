@@ -1,7 +1,7 @@
 var opcijeController = angular.module('certApp.opcijeController', []);
 
 opcijeController.controller('opcijeController', function($scope, $location,
-						opcijeService) {
+						opcijeService, $window) {
 	
 	$scope.privileges = [];
 	
@@ -19,8 +19,13 @@ opcijeController.controller('opcijeController', function($scope, $location,
 			return false;
 	};
 	
-	$scope.logout = function(){
-		opcijeService.logout();
-		$location.path('/');
-	};
+	$scope.logOut = function(){
+
+		opcijeService.logOut().success(function(data) {
+			if(data.message == "Izlogovan"){
+				$window.location.href = '/';
+			}else{
+			}
+		});
+	}
 })

@@ -1,6 +1,7 @@
 insert into rola (naziv) values ('Admin');
-insert into rola (naziv) values ('Lica');
+insert into rola (naziv) values ('Pravsafsa');
 
+insert into rola (naziv) values ('Lica');
 
 
 insert into privilegija (naziv) values ('SelfSign');

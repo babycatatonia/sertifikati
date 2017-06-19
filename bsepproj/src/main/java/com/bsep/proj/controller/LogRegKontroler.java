@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -60,5 +61,14 @@ public class LogRegKontroler {
 		}
 	}
 	
-	
+	@RequestMapping(value = "/check", method = RequestMethod.POST)
+	public ResponseEntity<Poruka> checkSessions(HttpSession session){
+		Korisnik kor = (Korisnik) session.getAttribute("ulogovanKorisnik");
+		if(kor != null){
+			return new ResponseEntity<Poruka>(new Poruka("NekoNaSesiji", kor), HttpStatus.ACCEPTED);
+		}else{
+			return new ResponseEntity<Poruka>(new Poruka("NikoNaSesiji", null), HttpStatus.ACCEPTED);
+		}	
+			
+	}
 }

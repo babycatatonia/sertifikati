@@ -92,8 +92,8 @@ public class Kontroler {
 		KeyStoreWriter ksw = new KeyStoreWriter();
 		KeyStoreReader ksr = new KeyStoreReader();
 		X509Certificate xcert=null;
-		//ksw.loadKeyStore("./data/keystore.jks", loadKeyStorePass().toCharArray());
-		ksw.loadKeyStore("C:\\Users\\me\\Desktop\\localKS.jks", "admin".toCharArray());
+		ksw.loadKeyStore("./data/keystore.jks", loadKeyStorePass().toCharArray());
+	//	ksw.loadKeyStore("C:\\Users\\me\\Desktop\\localKS.jks", "admin".toCharArray());
 		
 		Enumeration<String> aliases = ksw.getAlias();
 		ArrayList<String> certList = new ArrayList<String>();
@@ -107,8 +107,8 @@ public class Kontroler {
 		String alias = "";
 		
 		for(int i=0; i<certList.size(); i++){//TODO cuvati na nekom mestu valjda
-			//cert = ksr.readCertificate("./data/keystore.jks", loadKeyStorePass(), certList.get(i));
-			cert = ksr.readCertificate("C:\\Users\\me\\Desktop\\localKS.jks", "admin", certList.get(i)); 
+			cert = ksr.readCertificate("./data/keystore.jks", loadKeyStorePass(), certList.get(i));
+			//cert = ksr.readCertificate("C:\\Users\\me\\Desktop\\localKS.jks", "admin", certList.get(i)); 
 			xcert = (X509Certificate)cert;
 			 
 			if(xcert.getSerialNumber().compareTo(BigInteger.valueOf(ser))==0){
@@ -119,7 +119,7 @@ public class Kontroler {
 		}
 	
 		System.out.println("ALIAS POSLE FORA: "+certList.get(0));
-		/*
+		
 		ksw.save(xcert, "./exported/"+alias);
 		File file = new File("./exported/"+alias+".cer");
 		
@@ -129,9 +129,9 @@ public class Kontroler {
 		
 		 
          Path putanja = Paths.get("C:\\Users\\me\\Desktop\\" +alias+".cer");
-         Files.write(putanja, data);*/
+         Files.write(putanja, data);
 		
-		ksw.save(xcert, "C:\\Users\\me\\Desktop\\"+alias);
+		//ksw.save(xcert, "C:\\Users\\me\\Desktop\\"+alias);
 		
 	}
 	

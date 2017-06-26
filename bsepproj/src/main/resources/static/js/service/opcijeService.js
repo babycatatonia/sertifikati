@@ -9,8 +9,8 @@ opcijeService.factory('opcijeService', function($http) {
 		return $http.get('/klijentKontroler/ucitajPrivilegije');
 	}
 	
-	temp.logOut = function(){
-		return $http.post('/contr/logout');
+	temp.logout = function() {
+		return $http.post('contr/logout');
 	}
 
 	return temp;

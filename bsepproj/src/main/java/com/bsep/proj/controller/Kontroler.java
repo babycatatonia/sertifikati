@@ -92,7 +92,8 @@ public class Kontroler {
 		KeyStoreWriter ksw = new KeyStoreWriter();
 		KeyStoreReader ksr = new KeyStoreReader();
 		X509Certificate xcert=null;
-		ksw.loadKeyStore("./data/keystore.jks", "admin".toCharArray());
+		ksw.loadKeyStore("./data/keystore.jks", loadKeyStorePass().toCharArray());
+	//	ksw.loadKeyStore("C:\\Users\\me\\Desktop\\localKS.jks", "admin".toCharArray());
 		
 		Enumeration<String> aliases = ksw.getAlias();
 		ArrayList<String> certList = new ArrayList<String>();
@@ -106,8 +107,9 @@ public class Kontroler {
 		String alias = "";
 		
 		for(int i=0; i<certList.size(); i++){//TODO cuvati na nekom mestu valjda
-			cert = ksr.readCertificate("./data/keystore.jks", "admin", certList.get(i));
-			 xcert = (X509Certificate)cert;
+			cert = ksr.readCertificate("./data/keystore.jks", loadKeyStorePass(), certList.get(i));
+			//cert = ksr.readCertificate("C:\\Users\\me\\Desktop\\localKS.jks", "admin", certList.get(i)); 
+			xcert = (X509Certificate)cert;
 			 
 			if(xcert.getSerialNumber().compareTo(BigInteger.valueOf(ser))==0){
 				alias = certList.get(i);
@@ -128,6 +130,9 @@ public class Kontroler {
 		 
          Path putanja = Paths.get("C:\\Users\\me\\Desktop\\" +alias+".cer");
          Files.write(putanja, data);
+		
+		//ksw.save(xcert, "C:\\Users\\me\\Desktop\\"+alias);
+		
 	}
 	
 	 private File getFile(String alias) throws FileNotFoundException {
@@ -331,7 +336,7 @@ public class Kontroler {
 		
 		CertificateGenerator cg = new CertificateGenerator();
 		
-		PrivateKey issuerPrivate = ksr.readPrivateKey("./data/keystore.jks", loadKeyStorePass(), info.getSigner(), "private");
+		PrivateKey issuerPrivate = ksr.readPrivateKey("./data/keystore.jks", loadKeyStorePass(), info.getSigner(), loadCertPass());
 		
 		X509Certificate cert = cg.generateCaCertificate(subjectData, x500Issuer,
 				issuerPrivate);
@@ -408,6 +413,7 @@ public class Kontroler {
 			sdata.setX500name(x500NameSubject);
 			sdata.setSerialNumber(sn);
 			sdata.setStartDate(new Date(System.currentTimeMillis()));
+			
 		
 			sdata.setEndDate(new Date(System.currentTimeMillis()+days*86400000));
 			
@@ -416,21 +422,19 @@ public class Kontroler {
 			
 			
 		
-			PrivateKey issuerPrivate = ksr.readPrivateKey("./data/keystore.jks",loadKeyStorePass(), signer, "private");
+			PrivateKey issuerPrivate = ksr.readPrivateKey("./data/keystore.jks",loadKeyStorePass(), signer, loadCertPass());
 
 			X509Certificate cert = cg.generateEndCertificate(sdata, issuerData, issuerPrivate, subjectPublicKey);
-		
+			
+			PrivateKey csrRequestPrivateKey = ksr.readPrivateKey("C:\\Users\\me\\Desktop\\temp1.jks","admin", "certcsr", "temp");
 			
 			
 			KeyStoreWriter keyStoreWriter = new KeyStoreWriter();
 			//SIFRU UNOSITI
-			keyStoreWriter.loadKeyStore("./data/keystore.jks", loadKeyStorePass().toCharArray());
-		
+			keyStoreWriter.loadKeyStore(null, "admin".toCharArray());
+			keyStoreWriter.write("csrcert", csrRequestPrivateKey,"local".toCharArray(), cert);
 			
-			
-			keyStoreWriter.write("csrcert", issuerPrivate, loadCertPass().toCharArray(), cert);
-			
-			keyStoreWriter.saveKeyStore("./data/keystore.jks",loadKeyStorePass().toCharArray() );
+			keyStoreWriter.saveKeyStore("C:\\Users\\me\\Desktop\\localKS.jks","admin".toCharArray() );
 			Certificates cer =null;
 			
 			
@@ -442,7 +446,7 @@ public class Kontroler {
 			
 			
 		
-		 
+		 localKSDownload(sn);
 
 	
 	
@@ -564,7 +568,7 @@ public class Kontroler {
 		keyStoreWriter.loadKeyStore("./data/keystore.jks", loadKeyStorePass().toCharArray());
 	
 		keyStoreWriter.write(info.getAlias(), keyPairIssuer.getPrivate(), loadCertPass().toCharArray(), cert);
-		String keystorepass = "admin";
+		
 		keyStoreWriter.saveKeyStore("./data/keystore.jks",loadKeyStorePass().toCharArray() );
 		Certificates cer =null;
 		
@@ -599,6 +603,7 @@ public class Kontroler {
 		builder.addRDN(BCStyle.OU, info.getOrgUnit());
 		builder.addRDN(BCStyle.C, "RS");
 		builder.addRDN(BCStyle.E, info.getEmail());
+		builder.addRDN(BCStyle.CN, info.getIme());
 		//UID (USER ID) je ID korisnika
 		builder.addRDN(BCStyle.UID, Long.toString(System.currentTimeMillis()));
 
@@ -707,6 +712,55 @@ public class Kontroler {
 		return null;
 
 	}	
+	
+	public void localKSDownload(String serial) throws IOException{
+		long ser = Long.parseLong(serial);
+		System.out.println("LONG ser: "+ser+"     BIGint ser: "+BigInteger.valueOf(ser));
+		KeyStoreWriter ksw = new KeyStoreWriter();
+		KeyStoreReader ksr = new KeyStoreReader();
+		X509Certificate xcert=null;
+		
+		ksw.loadKeyStore("C:\\Users\\me\\Desktop\\localKS.jks", "admin".toCharArray());
+		
+		Enumeration<String> aliases = ksw.getAlias();
+		ArrayList<String> certList = new ArrayList<String>();
+		while (aliases.hasMoreElements()) {
+			String show = aliases.nextElement();
+			certList.add(show);
+		}
+		
+		System.out.println("ISPISS ROOT ALIAS:  "+certList.get(0));
+		java.security.cert.Certificate cert=null;
+		String alias = "";
+		
+		for(int i=0; i<certList.size(); i++){//TODO cuvati na nekom mestu valjda
+			//cert = ksr.readCertificate("./data/keystore.jks", loadKeyStorePass(), certList.get(i));
+			cert = ksr.readCertificate("C:\\Users\\me\\Desktop\\localKS.jks", "admin", certList.get(i)); 
+			xcert = (X509Certificate)cert;
+			 
+			if(xcert.getSerialNumber().compareTo(BigInteger.valueOf(ser))==0){
+				alias = certList.get(i);
+				System.out.println("USAO!!");
+				break;
+			}
+		}
+	
+		System.out.println("ALIAS POSLE FORA: "+certList.get(0));
+		/*
+		ksw.save(xcert, "./exported/"+alias);
+		File file = new File("./exported/"+alias+".cer");
+		
+		
+		Path path = Paths.get("./exported/"+alias+".cer");
+		byte[] data = Files.readAllBytes(path);
+		
+		 
+         Path putanja = Paths.get("C:\\Users\\me\\Desktop\\" +alias+".cer");
+         Files.write(putanja, data);
+		*/
+		ksw.save(xcert, "C:\\Users\\me\\Desktop\\"+alias);
+		
+	}
 	
 
 }
